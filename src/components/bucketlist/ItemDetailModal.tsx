@@ -32,6 +32,8 @@ export const ItemDetailModal = ({
   if (!isOpen || !item) return null;
 
   const showSideBySide = item.completed && !!item.photoUrl;
+  const canChangePhoto = item.completed && !!item.photoUrl && !!onUploadProof;
+  const canUploadProof = item.completed && !item.photoUrl && !!onUploadProof;
 
   const handleUploadClick = () => {
     fileInputRef.current?.click();
@@ -124,7 +126,7 @@ export const ItemDetailModal = ({
                 </button>
               )}
 
-              {item.completed && !item.photoUrl && onUploadProof && (
+              {canUploadProof && (
                 <>
                   <input
                     ref={fileInputRef}
@@ -141,6 +143,26 @@ export const ItemDetailModal = ({
                   >
                     {isUploadingProof ? "Uploaden..." : "Bewijsfoto uploaden"}
                   </button>
+                </>
+              )}
+
+              {canChangePhoto && (
+                <>
+                  <input
+                    ref={fileInputRef}
+                    type="file"
+                    accept="image/*"
+                    className="hidden"
+                    onChange={handleFileChange}
+                  />
+                    <button
+                      type="button"
+                      onClick={handleUploadClick}
+                      className="px-4 py-2 rounded-md bg-indigo-600 text-white hover:bg-indigo-700 transition disabled:opacity-60"
+                      disabled={isUploadingProof}
+                    >
+                      {isUploadingProof ? "Uploaden..." : "Bewijsfoto wijzigen"}
+                    </button>
                 </>
               )}
 

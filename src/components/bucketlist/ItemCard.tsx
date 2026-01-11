@@ -7,7 +7,7 @@ type ItemCardProps = {
 
 export const ItemCard = ({ item, onClick }: ItemCardProps) => {
   const cardBg =
-    item.completed === true ? "bg-emerald-50" : "bg-white";
+    item.completed === true ? "bg-emerald-100" : "bg-white";
 
   return (
     <button
@@ -16,8 +16,8 @@ export const ItemCard = ({ item, onClick }: ItemCardProps) => {
       style={{ breakInside: "avoid" }}
       className={`w-full text-left border border-gray-200 rounded-lg shadow-sm overflow-hidden hover:shadow-md transition focus:outline-none focus:ring-2 focus:ring-indigo-500 ${cardBg}`}
     >
-      <div className="px-3 py-2 bg-gray-50 text-sm font-semibold text-gray-700">
-        {item.username || item.userId}
+      <div className="px-3 py-2 text-sm font-semibold text-gray-700 border-b border-gray-200/70">
+        {item.username || item.userId || "Onbekende gebruiker"}
       </div>
       <div className="w-full bg-gray-100">
         {item.giphyUrl ? (

@@ -1,9 +1,11 @@
 import { useAuth } from "react-oidc-context";
 import { useNavigate } from "react-router-dom";
+import { getDisplayName } from "../../utils/auth";
 
 export const Header = () => {
   const { isAuthenticated, user, signinRedirect, signoutRedirect } = useAuth();
   const navigate = useNavigate();
+  const displayName = getDisplayName(user?.profile);
 
   return (
     <header className="w-full bg-white border-b border-gray-200 shadow-sm">
@@ -20,7 +22,7 @@ export const Header = () => {
           )}
           {isAuthenticated && (
             <span className="text-gray-700">
-              {user?.profile?.name || user?.profile?.sub}
+              {displayName}
             </span>
           )}
           <button

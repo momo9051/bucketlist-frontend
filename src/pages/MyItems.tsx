@@ -96,6 +96,14 @@ export const MyItems = () => {
           Maak bucketlist item
         </button>
       </div>
+      <div className="flex justify-end">
+        <button
+          onClick={() => navigate("/bucketlist")}
+          className="text-sm px-3 py-1.5 rounded-md bg-gray-100 text-gray-800 hover:bg-gray-200 transition"
+        >
+          Terug naar overzicht
+        </button>
+      </div>
 
       {error && (
         <div className="p-3 rounded-md bg-red-100 text-red-700 border border-red-200">
