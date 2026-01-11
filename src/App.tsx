@@ -3,6 +3,7 @@ import { Home } from "./pages/Home";
 import { SigninCallback } from "./pages/SigninCallback";
 import { Header } from "./components/layout/Header";
 import { Footer } from "./components/layout/Footer";
+import { ProtectedRoute } from "./components/auth/ProtectedRoute";
 
 function App() {
   return (
@@ -13,6 +14,14 @@ function App() {
           <Routes>
             <Route path="/signin-callback" element={<SigninCallback />} />
             <Route path="/" element={<Home />} />
+            <Route
+              path="/bucketlist"
+              element={
+                <ProtectedRoute>
+                  <div className="flex-1 p-6">Bucketlist (placeholder)</div>
+                </ProtectedRoute>
+              }
+            />
           </Routes>
         </main>
         <Footer />

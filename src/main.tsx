@@ -21,6 +21,8 @@ const oidcConfig: UserManagerSettings = {
   post_logout_redirect_uri: `${window.location.origin}/`,
   response_type: "code",
   scope: "openid profile bucketlist.api",
+  // Avoid extra userinfo call that can fail on strict CORS setups
+  loadUserInfo: false,
   automaticSilentRenew: true,
   monitorSession: true,
   userStore: new WebStorageStateStore({ store: window.localStorage }),
