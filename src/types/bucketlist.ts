@@ -1,6 +1,7 @@
 export interface BucketListItem {
   id: string;
   userId: string;
+  username: string;
   title: string;
   description: string | null;
   completed: boolean;
@@ -20,4 +21,11 @@ export interface BucketListItemUpdate {
   description?: string | null;
   completed: boolean;
   giphyUrl?: string | null;
+}
+
+export interface GiphyGif {
+  id: string;
+  title?: string;
+  previewUrl: string;
+  originalUrl: string;
 }

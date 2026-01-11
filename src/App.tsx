@@ -1,6 +1,9 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { Home } from "./pages/Home";
 import { SigninCallback } from "./pages/SigninCallback";
+import { BucketlistTimeline } from "./pages/BucketlistTimeline";
+import { BucketlistCreate } from "./pages/BucketlistCreate";
+import { BucketlistEdit } from "./pages/BucketlistEdit";
 import { Header } from "./components/layout/Header";
 import { Footer } from "./components/layout/Footer";
 import { ProtectedRoute } from "./components/auth/ProtectedRoute";
@@ -18,7 +21,23 @@ function App() {
               path="/bucketlist"
               element={
                 <ProtectedRoute>
-                  <div className="flex-1 p-6">Bucketlist (placeholder)</div>
+                  <BucketlistTimeline />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/bucketlist/create"
+              element={
+                <ProtectedRoute>
+                  <BucketlistCreate />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/bucketlist/edit/:id"
+              element={
+                <ProtectedRoute>
+                  <BucketlistEdit />
                 </ProtectedRoute>
               }
             />

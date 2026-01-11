@@ -1,0 +1,87 @@
+import type { BucketListItem } from "../../types";
+import { formatLocalDate } from "../../utils/date";
+
+type ItemDetailModalProps = {
+  item: BucketListItem | null;
+  isOpen: boolean;
+  onClose: () => void;
+  onEdit?: () => void;
+  onDelete?: () => void;
+  isOwner: boolean;
+};
+
+export const ItemDetailModal = ({
+  item,
+  isOpen,
+  onClose,
+  onEdit,
+  onDelete,
+  isOwner,
+}: ItemDetailModalProps) => {
+  if (!isOpen || !item) return null;
+
+  return (
+    <div className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center px-4">
+      <div className="bg-white w-full max-w-3xl rounded-lg shadow-xl overflow-hidden">
+        <div className="flex justify-between items-center px-4 py-3 border-b border-gray-200">
+          <div>
+            <p className="text-sm text-gray-600">{item.username || item.userId}</p>
+            <h2 className="text-xl font-semibold text-gray-900">{item.title}</h2>
+          </div>
+          <button
+            type="button"
+            onClick={onClose}
+            className="text-gray-500 hover:text-gray-700"
+          >
+            ✕
+          </button>
+        </div>
+
+        <div className="p-4 space-y-4">
+          <div className="w-full bg-gray-100 rounded-md overflow-hidden flex items-center justify-center">
+            <div className="max-h-[70vh] w-full flex items-center justify-center p-2">
+              {item.giphyUrl ? (
+                <img
+                  src={item.giphyUrl}
+                  alt={item.title}
+                  className="max-h-[70vh] max-w-full w-auto h-auto object-contain"
+                />
+              ) : (
+                <span className="text-gray-400 text-sm p-6">Geen afbeelding</span>
+              )}
+            </div>
+          </div>
+
+          <p className="text-gray-700 whitespace-pre-wrap">
+            {item.description ?? "Geen beschrijving"}
+          </p>
+
+          <p className="text-xs text-gray-500">
+            Aangemaakt op {formatLocalDate(item.createdAt)}
+          </p>
+
+          {isOwner && (
+            <div className="flex gap-3">
+              {onEdit && (
+                <button
+                  onClick={onEdit}
+                  className="px-4 py-2 rounded-md bg-indigo-600 text-white hover:bg-indigo-700 transition"
+                >
+                  Bewerken
+                </button>
+              )}
+              {onDelete && (
+                <button
+                  onClick={onDelete}
+                  className="px-4 py-2 rounded-md bg-red-600 text-white hover:bg-red-700 transition"
+                >
+                  Verwijderen
+                </button>
+              )}
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+};
