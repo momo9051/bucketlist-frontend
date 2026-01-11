@@ -77,11 +77,12 @@ export const BucketlistTimeline = () => {
       )}
 
       {isLoading ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="columns-1 md:columns-2 lg:columns-3 gap-4">
           {Array.from({ length: 6 }).map((_, idx) => (
             <div
               key={idx}
-              className="h-64 rounded-lg bg-gray-100 animate-pulse"
+              className="w-full mb-4 h-64 rounded-lg bg-gray-100 animate-pulse"
+              style={{ breakInside: "avoid" }}
             />
           ))}
         </div>
@@ -91,13 +92,11 @@ export const BucketlistTimeline = () => {
           <p className="text-sm">Klik op “Maak bucketlist item” om je eerste item toe te voegen.</p>
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="columns-1 md:columns-2 lg:columns-3 gap-4">
           {items.map((item) => (
-            <ItemCard
-              key={item.id}
-              item={item}
-              onClick={() => setSelectedItem(item)}
-            />
+            <div key={item.id} className="mb-4" style={{ breakInside: "avoid" }}>
+              <ItemCard item={item} onClick={() => setSelectedItem(item)} />
+            </div>
           ))}
         </div>
       )}
