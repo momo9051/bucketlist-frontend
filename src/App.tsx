@@ -4,6 +4,7 @@ import { SigninCallback } from "./pages/SigninCallback";
 import { BucketlistTimeline } from "./pages/BucketlistTimeline";
 import { BucketlistCreate } from "./pages/BucketlistCreate";
 import { BucketlistEdit } from "./pages/BucketlistEdit";
+import { MyItems } from "./pages/MyItems";
 import { Header } from "./components/layout/Header";
 import { Footer } from "./components/layout/Footer";
 import { ProtectedRoute } from "./components/auth/ProtectedRoute";
@@ -38,6 +39,14 @@ function App() {
               element={
                 <ProtectedRoute>
                   <BucketlistEdit />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/my-items"
+              element={
+                <ProtectedRoute>
+                  <MyItems />
                 </ProtectedRoute>
               }
             />

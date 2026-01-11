@@ -1,3 +1,4 @@
+import { useRef } from "react";
 import type { BucketListItem } from "../../types";
 import { formatLocalDate } from "../../utils/date";
 
@@ -8,6 +9,10 @@ type ItemDetailModalProps = {
   onEdit?: () => void;
   onDelete?: () => void;
   isOwner: boolean;
+  onMarkComplete?: () => Promise<void> | void;
+  onUploadProof?: (file: File) => Promise<void> | void;
+  isUpdatingStatus?: boolean;
+  isUploadingProof?: boolean;
 };
 
 export const ItemDetailModal = ({
@@ -17,8 +22,28 @@ export const ItemDetailModal = ({
   onEdit,
   onDelete,
   isOwner,
+  onMarkComplete,
+  onUploadProof,
+  isUpdatingStatus = false,
+  isUploadingProof = false,
 }: ItemDetailModalProps) => {
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
+
   if (!isOpen || !item) return null;
+
+  const showSideBySide = item.completed && !!item.photoUrl;
+
+  const handleUploadClick = () => {
+    fileInputRef.current?.click();
+  };
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file && onUploadProof) {
+      void onUploadProof(file);
+      e.target.value = "";
+    }
+  };
 
   return (
     <div className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center px-4">
@@ -38,19 +63,46 @@ export const ItemDetailModal = ({
         </div>
 
         <div className="p-4 space-y-4">
-          <div className="w-full bg-gray-100 rounded-md overflow-hidden flex items-center justify-center">
-            <div className="max-h-[70vh] w-full flex items-center justify-center p-2">
-              {item.giphyUrl ? (
-                <img
-                  src={item.giphyUrl}
-                  alt={item.title}
-                  className="max-h-[70vh] max-w-full w-auto h-auto object-contain"
-                />
-              ) : (
-                <span className="text-gray-400 text-sm p-6">Geen afbeelding</span>
-              )}
+          {showSideBySide ? (
+            <div className="flex flex-col md:flex-row gap-4">
+              <div className="bg-gray-100 rounded-md overflow-hidden flex-1 flex items-center justify-center aspect-square">
+                {item.giphyUrl ? (
+                  <img
+                    src={item.giphyUrl}
+                    alt={item.title}
+                    className="w-full h-full object-cover"
+                  />
+                ) : (
+                  <span className="text-gray-400 text-sm p-6">Geen afbeelding</span>
+                )}
+              </div>
+              <div className="bg-gray-100 rounded-md overflow-hidden flex-1 flex items-center justify-center aspect-square">
+                {item.photoUrl ? (
+                  <img
+                    src={item.photoUrl}
+                    alt="Bewijsfoto"
+                    className="w-full h-full object-cover"
+                  />
+                ) : (
+                  <span className="text-gray-400 text-sm p-6">Geen foto</span>
+                )}
+              </div>
             </div>
-          </div>
+          ) : (
+            <div className="w-full bg-gray-100 rounded-md overflow-hidden flex items-center justify-center">
+              <div className="max-h-[70vh] max-w-full w-full flex items-center justify-center p-2">
+                {item.giphyUrl ? (
+                  <img
+                    src={item.giphyUrl}
+                    alt={item.title}
+                    className="max-h-[70vh] max-w-full w-auto h-auto object-contain"
+                  />
+                ) : (
+                  <span className="text-gray-400 text-sm p-6">Geen afbeelding</span>
+                )}
+              </div>
+            </div>
+          )}
 
           <p className="text-gray-700 whitespace-pre-wrap">
             {item.description ?? "Geen beschrijving"}
@@ -61,7 +113,37 @@ export const ItemDetailModal = ({
           </p>
 
           {isOwner && (
-            <div className="flex gap-3">
+            <div className="flex flex-wrap gap-3">
+              {onMarkComplete && !item.completed && (
+                <button
+                  onClick={() => onMarkComplete()}
+                  className="px-4 py-2 rounded-md bg-emerald-600 text-white hover:bg-emerald-700 transition disabled:opacity-60"
+                  disabled={isUpdatingStatus}
+                >
+                  {isUpdatingStatus ? "Bezig..." : "Markeer als voltooid"}
+                </button>
+              )}
+
+              {item.completed && !item.photoUrl && onUploadProof && (
+                <>
+                  <input
+                    ref={fileInputRef}
+                    type="file"
+                    accept="image/*"
+                    className="hidden"
+                    onChange={handleFileChange}
+                  />
+                  <button
+                    type="button"
+                    onClick={handleUploadClick}
+                    className="px-4 py-2 rounded-md bg-indigo-600 text-white hover:bg-indigo-700 transition disabled:opacity-60"
+                    disabled={isUploadingProof}
+                  >
+                    {isUploadingProof ? "Uploaden..." : "Bewijsfoto uploaden"}
+                  </button>
+                </>
+              )}
+
               {onEdit && (
                 <button
                   onClick={onEdit}

@@ -1,14 +1,13 @@
 import { useEffect, useMemo, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { useAuth } from "react-oidc-context";
+import { useNavigate } from "react-router-dom";
 import { ItemCard } from "../components/bucketlist/ItemCard";
 import { ItemDetailModal } from "../components/bucketlist/ItemDetailModal";
 import { useBucketlistService } from "../services/bucketlistService";
 import type { BucketListItem } from "../types";
-import giphyLogo from "../../assets/giphy logo/GIPHY Logo 105px.png";
 
-export const BucketlistTimeline = () => {
-  const { getAll, remove, updateStatus, uploadProof } = useBucketlistService();
+export const MyItems = () => {
+  const { getMyItems, remove, updateStatus, uploadProof } = useBucketlistService();
   const auth = useAuth();
   const navigate = useNavigate();
 
@@ -29,10 +28,10 @@ export const BucketlistTimeline = () => {
     try {
       setIsLoading(true);
       setError(null);
-      const data = await getAll();
+      const data = await getMyItems();
       setItems(data);
     } catch (e) {
-      setError("Kon bucketlist items niet laden.");
+      setError("Kon mijn bucketlist items niet laden.");
     } finally {
       setIsLoading(false);
     }
@@ -83,13 +82,13 @@ export const BucketlistTimeline = () => {
     }
   };
 
+  const todos = items.filter((it) => !it.completed);
+  const dones = items.filter((it) => it.completed);
+
   return (
-    <div className="max-w-6xl mx-auto px-4 py-6 space-y-6">
-      <div className="flex items-center justify-between gap-4">
-        <div className="flex items-center gap-3">
-          <h1 className="text-2xl font-semibold text-gray-900">Bucket List Timeline</h1>
-          <img src={giphyLogo} alt="GIPHY" className="h-6 w-auto" />
-        </div>
+    <div className="max-w-6xl mx-auto px-4 py-6 space-y-8">
+      <div className="flex items-center justify-between">
+        <h1 className="text-2xl font-semibold text-gray-900">Mijn items</h1>
         <button
           onClick={() => navigate("/bucketlist/create")}
           className="px-4 py-2 rounded-md bg-indigo-600 text-white hover:bg-indigo-700 transition"
@@ -105,28 +104,46 @@ export const BucketlistTimeline = () => {
       )}
 
       {isLoading ? (
-        <div className="columns-1 md:columns-2 lg:columns-3 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {Array.from({ length: 6 }).map((_, idx) => (
             <div
               key={idx}
-              className="w-full mb-4 h-64 rounded-lg bg-gray-100 animate-pulse"
-              style={{ breakInside: "avoid" }}
+              className="w-full h-64 rounded-lg bg-gray-100 animate-pulse"
             />
           ))}
         </div>
-      ) : items.length === 0 ? (
-        <div className="text-center text-gray-600 space-y-4 py-10">
-          <p className="text-lg">Er zijn nog geen bucketlist items.</p>
-          <p className="text-sm">Klik op “Maak bucketlist item” om je eerste item toe te voegen.</p>
-        </div>
       ) : (
-        <div className="columns-1 md:columns-2 lg:columns-3 gap-4">
-          {items.map((item) => (
-            <div key={item.id} className="mb-4" style={{ breakInside: "avoid" }}>
-              <ItemCard item={item} onClick={() => setSelectedItem(item)} />
-            </div>
-          ))}
-        </div>
+        <>
+          <section className="space-y-4">
+            <h2 className="text-xl font-bold mb-2">Nog te doen</h2>
+            {todos.length === 0 ? (
+              <p className="text-gray-600">Geen openstaande items.</p>
+            ) : (
+              <div className="columns-1 md:columns-2 lg:columns-3 gap-4">
+                {todos.map((item) => (
+                  <div key={item.id} className="mb-4" style={{ breakInside: "avoid" }}>
+                    <ItemCard item={item} onClick={() => setSelectedItem(item)} />
+                  </div>
+                ))}
+              </div>
+            )}
+          </section>
+
+          <section className="space-y-4">
+            <h2 className="text-xl font-bold mb-2">Voltooid</h2>
+            {dones.length === 0 ? (
+              <p className="text-gray-600">Nog geen voltooide items.</p>
+            ) : (
+              <div className="columns-1 md:columns-2 lg:columns-3 gap-4">
+                {dones.map((item) => (
+                  <div key={item.id} className="mb-4" style={{ breakInside: "avoid" }}>
+                    <ItemCard item={item} onClick={() => setSelectedItem(item)} />
+                  </div>
+                ))}
+              </div>
+            )}
+          </section>
+        </>
       )}
 
       <ItemDetailModal
@@ -145,7 +162,7 @@ export const BucketlistTimeline = () => {
           !!selectedItem && !!currentUserId && selectedItem.userId === currentUserId
         }
         onMarkComplete={
-          selectedItem && selectedItem.completed === false && selectedItem.id
+          selectedItem && selectedItem.completed === false
             ? () => handleMarkComplete(selectedItem.id)
             : undefined
         }
