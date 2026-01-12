@@ -14,7 +14,7 @@ export const Header = () => {
         <div className="flex items-center gap-3 text-sm">
           {isAuthenticated && (
             <button
-              className="px-3 py-1.5 rounded-md bg-gray-100 text-gray-800 hover:bg-gray-200 transition"
+              className="px-3 py-1.5 rounded-md bg-indigo-50 text-indigo-800 hover:bg-indigo-100 transition"
               onClick={() => navigate("/my-items")}
             >
               Mijn items

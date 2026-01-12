@@ -84,15 +84,17 @@ export const BucketlistTimeline = () => {
   };
 
   return (
-    <div className="max-w-6xl mx-auto px-4 py-6 space-y-6">
-      <div className="flex items-center justify-between gap-4">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex items-center gap-3">
-          <h1 className="text-2xl font-semibold text-gray-900">Bucket List Timeline</h1>
-          <img src={giphyLogo} alt="GIPHY" className="h-6 w-auto" />
+          <div>
+            <h1 className="text-3xl font-semibold text-gray-900">Bucket List Timeline</h1>
+          </div>
+          <img src={giphyLogo} alt="GIPHY" className="h-7 w-auto" />
         </div>
         <button
           onClick={() => navigate("/bucketlist/create")}
-          className="px-4 py-2 rounded-md bg-indigo-600 text-white hover:bg-indigo-700 transition"
+          className="inline-flex items-center justify-center px-4 py-2.5 rounded-lg bg-indigo-600 text-white text-sm font-semibold shadow-sm hover:bg-indigo-700 hover:shadow-md transition-all"
         >
           Maak bucketlist item
         </button>
@@ -105,11 +107,11 @@ export const BucketlistTimeline = () => {
       )}
 
       {isLoading ? (
-        <div className="columns-1 md:columns-2 lg:columns-3 gap-4">
+        <div className="columns-1 sm:columns-2 xl:columns-3 2xl:columns-4 gap-5">
           {Array.from({ length: 6 }).map((_, idx) => (
             <div
               key={idx}
-              className="w-full mb-4 h-64 rounded-lg bg-gray-100 animate-pulse"
+              className="w-full mb-5 h-64 rounded-xl bg-white border border-gray-200/70 shadow-sm animate-pulse"
               style={{ breakInside: "avoid" }}
             />
           ))}
@@ -120,9 +122,9 @@ export const BucketlistTimeline = () => {
           <p className="text-sm">Klik op “Maak bucketlist item” om je eerste item toe te voegen.</p>
         </div>
       ) : (
-        <div className="columns-1 md:columns-2 lg:columns-3 gap-4">
+        <div className="columns-1 sm:columns-2 xl:columns-3 2xl:columns-4 gap-5">
           {items.map((item) => (
-            <div key={item.id} className="mb-4" style={{ breakInside: "avoid" }}>
+            <div key={item.id} className="mb-5" style={{ breakInside: "avoid" }}>
               <ItemCard item={item} onClick={() => setSelectedItem(item)} />
             </div>
           ))}
